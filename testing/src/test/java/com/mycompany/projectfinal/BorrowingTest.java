@@ -7,7 +7,8 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Borrowing Model Full Test Suite")
-class BorrowingTest {
+class BorrowingTest 
+{
 
     private Borrowing borrowing;
     private Date borrowDate;
@@ -15,18 +16,19 @@ class BorrowingTest {
     private Date pastDueDate;
 
     @BeforeEach
-    void setUp() {
-        borrowDate = new Date();
+    void setUp() 
+    {
+        borrowDate= new Date();
 
         
-        Calendar futureCal = Calendar.getInstance();
+        Calendar futureCal= Calendar.getInstance();
         futureCal.add(Calendar.DAY_OF_MONTH, 14);
-        futureDueDate = futureCal.getTime();
+        futureDueDate= futureCal.getTime();
 
         
-        Calendar pastCal = Calendar.getInstance();
+        Calendar pastCal= Calendar.getInstance();
         pastCal.add(Calendar.DAY_OF_MONTH, -1);
-        pastDueDate = pastCal.getTime();
+        pastDueDate= pastCal.getTime();
 
         borrowing = new Borrowing("BOR1001", "978-1234567890", "MEM1001",
                                   borrowDate, futureDueDate);
@@ -86,9 +88,9 @@ class BorrowingTest {
     
 
     @Test
-    @DisplayName("No-arg constructor: all fields null / default")
+    @DisplayName("No-arg constructor: all fields null/default")
     void testDefaultConstructor() {
-        Borrowing empty = new Borrowing();
+        Borrowing empty= new Borrowing();
         assertNull(empty.getBorrowingId());
         assertNull(empty.getBookIsbn());
         assertNull(empty.getMemberId());
@@ -124,7 +126,7 @@ class BorrowingTest {
     @Test
     @DisplayName("setBorrowDate updates value")
     void testSetBorrowDate() {
-        Date newDate = new Date(0); // epoch
+        Date newDate= new Date(0);
         borrowing.setBorrowDate(newDate);
         assertEquals(newDate, borrowing.getBorrowDate());
     }
@@ -132,7 +134,7 @@ class BorrowingTest {
     @Test
     @DisplayName("setDueDate updates value")
     void testSetDueDate() {
-        Date newDate = new Date(0);
+        Date newDate= new Date(0);
         borrowing.setDueDate(newDate);
         assertEquals(newDate, borrowing.getDueDate());
     }
@@ -140,7 +142,7 @@ class BorrowingTest {
     @Test
     @DisplayName("setReturnDate updates value")
     void testSetReturnDate() {
-        Date returnDate = new Date();
+        Date returnDate= new Date();
         borrowing.setReturnDate(returnDate);
         assertEquals(returnDate, borrowing.getReturnDate());
     }
@@ -186,9 +188,9 @@ class BorrowingTest {
     @Test
     @DisplayName("returnBook: returnDate is not in the far past")
     void testReturnBookReturnDateReasonable() {
-        Date before = new Date(System.currentTimeMillis() - 5000);
+        Date before= new Date(System.currentTimeMillis() - 5000);
         borrowing.returnBook();
-        Date after = new Date(System.currentTimeMillis() + 5000);
+        Date after= new Date(System.currentTimeMillis() + 5000);
 
         assertFalse(borrowing.getReturnDate().before(before));
         assertFalse(borrowing.getReturnDate().after(after));
@@ -200,14 +202,14 @@ class BorrowingTest {
         borrowing.returnBook();
         Date firstReturn = borrowing.getReturnDate();
 
-        // small delay to differentiate time
+        
         try { Thread.sleep(5); } catch (InterruptedException ignored) {}
         borrowing.returnBook();
         Date secondReturn = borrowing.getReturnDate();
 
         assertEquals(Borrowing.BorrowingStatus.RETURNED, borrowing.getStatus());
         assertNotNull(secondReturn);
-        // second call updates the returnDate to a new time
+        
         assertFalse(secondReturn.before(firstReturn));
     }
 
@@ -240,7 +242,7 @@ class BorrowingTest {
     @DisplayName("isOverdue: false when status OVERDUE but not overdue by date")
     void testIsOverdueFalseWhenStatusOverdueButDateFuture() {
         borrowing.setStatus(Borrowing.BorrowingStatus.OVERDUE);
-        // dueDate still in future
+        
         assertFalse(borrowing.isOverdue());
     }
 
@@ -257,14 +259,14 @@ class BorrowingTest {
     @DisplayName("isOverdue: false on exact same instant as dueDate (boundary)")
     void testIsOverdueAtExactDueDate() {
         borrowing.setDueDate(new Date());
-        // isOverdue uses after() — same instant is NOT after
+        
         assertFalse(borrowing.isOverdue());
     }
 
     @Test
     @DisplayName("isOverdue: true one millisecond after dueDate (boundary)")
     void testIsOverdueOneMillisecondAfter() throws InterruptedException {
-        Date due = new Date(System.currentTimeMillis() + 50);
+        Date due= new Date(System.currentTimeMillis() + 50);
         borrowing.setDueDate(due);
         Thread.sleep(100);
         assertTrue(borrowing.isOverdue());
@@ -308,7 +310,7 @@ class BorrowingTest {
     @Test
     @DisplayName("BorrowingStatus contains ACTIVE, RETURNED, OVERDUE")
     void testBorrowingStatusContainsAll() {
-        Borrowing.BorrowingStatus[] values = Borrowing.BorrowingStatus.values();
+        Borrowing.BorrowingStatus[] values= Borrowing.BorrowingStatus.values();
         assertTrue(java.util.Arrays.asList(values).contains(Borrowing.BorrowingStatus.ACTIVE));
         assertTrue(java.util.Arrays.asList(values).contains(Borrowing.BorrowingStatus.RETURNED));
         assertTrue(java.util.Arrays.asList(values).contains(Borrowing.BorrowingStatus.OVERDUE));
